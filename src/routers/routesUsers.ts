@@ -13,7 +13,7 @@ const userRoutes: Router = Router()
 userRoutes.post('', ensureDataIsValid(createUserSchema), createUsersController)
 userRoutes.get('', ensureTokenIsValid, ensureAdminIsValid, getUserController)
 userRoutes.patch('/:id', ensureTokenIsValid, userEqualId, ensureUserpExists, updateUser)
-userRoutes.delete('/:id', ensureTokenIsValid, ensureUserpExists, deleteSoft)
+userRoutes.delete('/:id', ensureTokenIsValid, userEqualId, ensureUserpExists, deleteSoft)
 userRoutes.get('/profile', ensureTokenIsValid, getUserLoged)
 userRoutes.put('/:id/recover', ensureTokenIsValid, ensureAdminIsValid, ensureUserpExists, activeUser)
 
