@@ -1,10 +1,10 @@
 import { QueryConfig } from "pg"
 import { client } from "../database"
 import { AppError } from "../errors"
-import { IUser, IUserPass, IUserResult } from "../interfaces/userInterface"
+import { IUser, IUserPass, IUserResult, IUserWithoutPassword } from "../interfaces/userInterface"
 import { userGetSchema } from "../schemas/schemas"
 
-const activeUserService = async (userData: IUser, userId: number): Promise<IUserPass> => {
+const activeUserService = async (userData: IUser, userId: number): Promise<IUserWithoutPassword> => {
 
   const queryAlredyExists: string = `
   SELECT * FROM users
@@ -28,12 +28,12 @@ const activeUserService = async (userData: IUser, userId: number): Promise<IUser
 
   const queryConfig: QueryConfig = {
     text: queryString,
-    values: [userId]
+    values: [userId] 
   }
 
   const queryResultUpdate: IUserResult = await client.query(queryConfig)
   const users = userGetSchema.parse(queryResultUpdate.rows)
-  return users
+  return users[0]
 }
 
 export { activeUserService }

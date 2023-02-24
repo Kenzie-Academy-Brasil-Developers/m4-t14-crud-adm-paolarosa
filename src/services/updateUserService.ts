@@ -23,7 +23,7 @@ const updateUserService = async (userData: IUser, userId: number): Promise<IUser
         UPDATE users
         SET   (%I) = ROW(%L)
         WHERE id   = $1
-        RETURNING *;
+        RETURNING id, name, email, admin, active;
         `
   const queryFormat: string = format(
     queryStringUpdate,

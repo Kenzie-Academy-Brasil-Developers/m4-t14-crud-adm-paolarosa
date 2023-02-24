@@ -1,6 +1,6 @@
 import { QueryConfig } from 'pg'
 import { ILoginRequest } from '../interfaces/loginInterface'
-import { IAllUsersReturn } from '../interfaces/userInterface'
+import { IUserWithoutPassword } from '../interfaces/userInterface'
 import { client } from '../database'
 import { Request } from "express"
 import jwt from 'jsonwebtoken'
@@ -8,7 +8,7 @@ import 'dotenv/config'
 import { allUsersSchema } from '../schemas/schemas'
 
 
-const getLoginUser = async (loginData: ILoginRequest, req: Request): Promise<IAllUsersReturn> => {
+const getLoginUser = async (loginData: ILoginRequest, req: Request): Promise<IUserWithoutPassword> => {
     let token = req.headers.authorization
     token = token!.split(' ')[1]
     const tokenTalen = jwt.verify(token, process.env.SECRET_KEY!, (error, decoded: any) => {
@@ -29,8 +29,10 @@ const getLoginUser = async (loginData: ILoginRequest, req: Request): Promise<IAl
         values: [tokenTalen]
     }
     const queryResultUser = await client.query(queryConfigUser)
-    const allUsers = allUsersSchema.parse(queryResultUser.rows)
-    return allUsers
+    console.log(1,queryResultUser.rows[0])
+    let allUsers = allUsersSchema.parse(queryResultUser.rows)
+    console.log(2,allUsers)
+    return allUsers[0]
 }
 
 
